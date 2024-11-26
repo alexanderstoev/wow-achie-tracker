@@ -7,7 +7,7 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <main className="">
+      <main className="flex w-full flex-col items-stretch gap-6 p-12 ">
         <CharacterSelect />
         <AchievementSelect />
       </main>
