@@ -16,7 +16,7 @@ import { Input } from "~/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { ChevronDownCircle, ChevronUpCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const CAPTIONS = {
   "Achievement Selection": "Achievement Selection",
@@ -27,18 +27,29 @@ const formSchema = z.object({
   achievementId: z.coerce.number(),
 });
 
-export const AchievementSelect = () => {
-  const [formExpanded, setFormExpanded] = useState(true);
+export type AchievementSelectProps = {
+  settings: SettingsType;
+  updateSettings: (settings: SettingsType) => void;
+};
+
+export const AchievementSelect = ({
+  settings,
+  updateSettings,
+}: AchievementSelectProps) => {
+  const [formExpanded, setFormExpanded] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      achievementId: 0,
-    },
+    defaultValues: settings,
   });
 
+  useEffect(() => {
+    form.setValue("achievementId", settings.achievementId ?? 0);
+    setFormExpanded(!settings.achievementId);
+  }, [form, settings]);
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("onSubmit", values);
+    updateSettings(values);
     setFormExpanded(false);
   };
 
@@ -54,11 +65,11 @@ export const AchievementSelect = () => {
           onClick={() => setFormExpanded(!formExpanded)}
         >
           {formExpanded && <span>Achievement Selection</span>}
-          {!formExpanded && !!form.getValues().achievementId && (
-            <span className="font-bold">Achievement Name</span>
+          {!formExpanded && !!settings.achievement?.name && (
+            <span className="font-bold">{settings.achievement?.name}</span>
           )}
-          {!formExpanded && !form.getValues().achievementId && (
-            <span className="">{CAPTIONS["No achievement selected"]} </span>
+          {!formExpanded && !settings.achievement?.name && (
+            <span>{CAPTIONS["No achievement selected"]} </span>
           )}
           <Button
             variant="ghost"

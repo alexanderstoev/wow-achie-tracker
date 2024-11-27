@@ -22,7 +22,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { ChevronDownCircle, ChevronUpCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const CAPTIONS = {
   "Character Selection": "Character Selection",
@@ -41,20 +41,37 @@ const formSchema = z.object({
   region: z.enum(["US", "EU", "KR", "TW", "CN"]),
 });
 
-export const CharacterSelect = () => {
-  const [formExpanded, setFormExpanded] = useState(true);
+export type CharacterSelectProps = {
+  settings: SettingsType;
+  updateSettings: (settings: SettingsType) => void;
+};
+
+export const CharacterSelect = ({
+  settings,
+  updateSettings,
+}: CharacterSelectProps) => {
+  const [formExpanded, setFormExpanded] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      characterName: "",
-      realmName: "",
-      region: "EU",
+      characterName: settings.characterName,
+      realmName: settings.realmName,
+      region: settings.region,
     },
   });
 
+  useEffect(() => {
+    form.setValue("characterName", settings.characterName ?? "");
+    form.setValue("realmName", settings.realmName ?? "");
+    form.setValue("region", settings.region ?? "EU");
+    setFormExpanded(
+      !settings.characterName || !settings.realmName || !settings.region,
+    );
+  }, [form, settings]);
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("onSubmit", values);
+    updateSettings(values);
     setFormExpanded(false);
   };
 
