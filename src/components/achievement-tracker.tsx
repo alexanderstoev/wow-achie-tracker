@@ -42,15 +42,19 @@ export const AchievementTracker = () => {
   }, [achievementQuery.data, achievementQuery.isSuccess]);
 
   return (
-    <main className="flex w-full flex-col items-stretch gap-6 p-12">
-      <CharacterSelect
-        settings={settings}
-        updateSettings={(settings) => handleUpdateSettings(settings)}
-      />
-      <AchievementSelect
-        settings={settings}
-        updateSettings={(settings) => handleUpdateSettings(settings)}
-      />
+    <main className="flex w-full flex-col items-stretch gap-6 px-12">
+      <div className="flex items-center justify-start gap-2">
+        Tracking
+        <AchievementSelect
+          settings={settings}
+          updateSettings={(settings) => handleUpdateSettings(settings)}
+        />
+        for
+        <CharacterSelect
+          settings={settings}
+          updateSettings={(settings) => handleUpdateSettings(settings)}
+        />
+      </div>
       {settings.achievement?.id && (
         <>
           <Achievement achievement={settings.achievement} />

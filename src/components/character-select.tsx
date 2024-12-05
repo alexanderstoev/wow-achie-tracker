@@ -23,6 +23,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { ChevronDownCircle, ChevronUpCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 
 const CAPTIONS = {
   "Character Selection": "Character Selection",
@@ -50,7 +58,8 @@ export const CharacterSelect = ({
   settings,
   updateSettings,
 }: CharacterSelectProps) => {
-  const [formExpanded, setFormExpanded] = useState(false);
+  //
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,14 +74,11 @@ export const CharacterSelect = ({
     form.setValue("characterName", settings.characterName ?? "");
     form.setValue("realmName", settings.realmName ?? "");
     form.setValue("region", settings.region ?? "EU");
-    setFormExpanded(
-      !settings.characterName || !settings.realmName || !settings.region,
-    );
   }, [form, settings]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     updateSettings(values);
-    setFormExpanded(false);
+    setDialogOpen(false);
   };
 
   const handleApplyClick = () => {
@@ -80,109 +86,90 @@ export const CharacterSelect = ({
   };
 
   return (
-    <Card className="w-full flex-1 border-0">
-      <CardHeader>
-        <CardTitle
-          className="flex cursor-pointer items-center justify-between font-normal"
-          onClick={() => setFormExpanded(!formExpanded)}
-        >
-          {formExpanded && <span>Character Selection</span>}
-          {!formExpanded && form.getValues().characterName && (
-            <span>
-              <span className="font-bold">
-                {form.getValues().characterName}
-              </span>{" "}
-              <span>{CAPTIONS.from}</span>{" "}
-              <span className="font-bold">{form.getValues().realmName}</span>{" "}
-              <span>{CAPTIONS.at}</span>{" "}
-              <span className="font-bold">{form.getValues().region}</span>{" "}
-            </span>
-          )}
-          {!formExpanded && !form.getValues().characterName && (
-            <span className="">{CAPTIONS["No character selected"]} </span>
-          )}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setFormExpanded(!formExpanded)}
-          >
-            {formExpanded && <ChevronUpCircle />}
-            {!formExpanded && <ChevronDownCircle />}
-          </Button>
-        </CardTitle>
-      </CardHeader>
-      {formExpanded && (
-        <CardContent>
-          <Form {...form}>
-            <form className="flex flex-col gap-6">
-              <FormField
-                control={form.control}
-                name="characterName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Character name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Character name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    <FormDescription></FormDescription>
-                  </FormItem>
-                )}
-              ></FormField>
-              <FormField
-                control={form.control}
-                name="realmName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Realm name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Realm name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    <FormDescription></FormDescription>
-                  </FormItem>
-                )}
-              ></FormField>
-              <div className="flex w-full items-end justify-between">
-                <FormField
-                  control={form.control}
-                  name="region"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Region</FormLabel>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          {!!settings.characterName &&
+            !!settings.realmName &&
+            !!settings.region &&
+            `${settings.characterName} from ${settings.realmName} at ${settings.region}`}
+          {!settings.achievement?.name && "select character"}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="min-w-52">
+        <DialogHeader>
+          <DialogTitle className="flex cursor-pointer items-center justify-between font-normal">
+            Character info
+          </DialogTitle>
+        </DialogHeader>
 
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-[80px]">
-                            <SelectValue placeholder="Region" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="US">US</SelectItem>
-                          <SelectItem value="EU">EU</SelectItem>
-                          <SelectItem value="KR">KR</SelectItem>
-                          <SelectItem value="TW">TW</SelectItem>
-                          <SelectItem value="CN">CN</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                      <FormDescription>
-                        Valid regions EU, US, KR, TW, CN.
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                ></FormField>
-                <Button type="button" onClick={() => handleApplyClick()}>
-                  Apply
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      )}
-    </Card>
+        <Form {...form}>
+          <form className="flex flex-col gap-6">
+            <FormField
+              control={form.control}
+              name="characterName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Character name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Character name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                  <FormDescription></FormDescription>
+                </FormItem>
+              )}
+            ></FormField>
+            <FormField
+              control={form.control}
+              name="realmName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Realm name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Realm name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                  <FormDescription></FormDescription>
+                </FormItem>
+              )}
+            ></FormField>
+
+            <FormField
+              control={form.control}
+              name="region"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Region</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue placeholder="Region" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="US">US</SelectItem>
+                      <SelectItem value="EU">EU</SelectItem>
+                      <SelectItem value="KR">KR</SelectItem>
+                      <SelectItem value="TW">TW</SelectItem>
+                      <SelectItem value="CN">CN</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+
+            <DialogFooter>
+              <Button type="button" onClick={() => handleApplyClick()}>
+                Apply
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
