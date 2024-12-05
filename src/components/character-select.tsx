@@ -19,9 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import { ChevronDownCircle, ChevronUpCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -31,13 +29,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-
-const CAPTIONS = {
-  "Character Selection": "Character Selection",
-  "No character selected": "Expand to select a character",
-  from: "from",
-  at: "at",
-};
 
 const formSchema = z.object({
   characterName: z.string().min(2, {
