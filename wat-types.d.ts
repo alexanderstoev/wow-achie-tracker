@@ -6,10 +6,18 @@ interface Achievement {
   points?: number;
   is_account_wide?: boolean;
   criteria: Criteria;
+  reward_description?: string;
+  reward_item?: RewardItem;
 }
 
 interface Key {
   href: string;
+}
+
+interface RewardItem {
+  id: number;
+  key: Key;
+  name: string;
 }
 
 interface CriteriaAchievement {
