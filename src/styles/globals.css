@@ -27,7 +27,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -53,7 +53,7 @@
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
 @layer base {
@@ -62,5 +62,19 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .reward {
+    filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 1));
+    @apply relative h-[32px] bg-green-950 px-6 leading-[32px];
+  }
+  .reward::before {
+    filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 1));
+    content: "";
+    @apply absolute bottom-0 left-[-20px] h-[32px] w-0 border-b-[32px] border-l-[20px] border-green-950 border-l-transparent;
+  }
+  .reward::after {
+    filter: drop-shadow(0px 0px 0px rgba(0, 0, 0, 1));
+    content: "";
+    @apply absolute bottom-0 right-[-20px] h-[32px] w-0 border-b-[32px] border-r-[20px] border-green-950 border-r-transparent;
   }
 }
