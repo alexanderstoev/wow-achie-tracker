@@ -80,7 +80,7 @@ export const AchievementSelect = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form>
+          <form onSubmit={(ev) => ev.preventDefault()}>
             <FormField
               control={form.control}
               name="achievementId"
