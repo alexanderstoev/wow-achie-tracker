@@ -15,5 +15,6 @@
   "vscode_custom_css.imports": [
     "file:D:\\_alex\\projects\\wow-achie-tracker\\.vscode\\custom-vscode.css",
     "file:D:\\_alex\\projects\\wow-achie-tracker\\.vscode\\vscode-script.js"
-  ]
+  ],
+  "css.customData": [".vscode/tailwind.json"]
 }
