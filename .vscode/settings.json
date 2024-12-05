@@ -1,0 +1,19 @@
+{
+  "editor.copyWithSyntaxHighlighting": false,
+  "editor.minimap.enabled": false,
+  // "editor.snippetSuggestions": "top",
+  "editor.gotoLocation.multipleReferences": "goto",
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleDeclarations": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+  "workbench.editor.enablePreview": false,
+  "editor.hover.enabled": true,
+
+  "editor.fontFamily": "Geist Mono, JetBrains Mono, Fira Code",
+
+  "vscode_custom_css.imports": [
+    "file:D:\\_alex\\projects\\wow-achie-tracker\\.vscode\\custom-vscode.css",
+    "file:D:\\_alex\\projects\\wow-achie-tracker\\.vscode\\vscode-script.js"
+  ]
+}
