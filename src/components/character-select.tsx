@@ -80,7 +80,7 @@ export const CharacterSelect = ({
   };
 
   return (
-    <Card className="w-full flex-1">
+    <Card className="w-full flex-1 border-0">
       <CardHeader>
         <CardTitle
           className="flex cursor-pointer items-center justify-between font-normal"

@@ -51,7 +51,12 @@ export const AchievementTracker = () => {
         settings={settings}
         updateSettings={(settings) => handleUpdateSettings(settings)}
       />
-      <Achievement achievement={settings.achievement} />
+      {settings.achievement?.id && (
+        <>
+          <Achievement achievement={settings.achievement} />
+          <Achievement achievement={settings.achievement} variant="completed" />
+        </>
+      )}
     </main>
   );
 };
