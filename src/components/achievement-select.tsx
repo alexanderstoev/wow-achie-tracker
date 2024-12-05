@@ -51,7 +51,10 @@ export const AchievementSelect = ({
   }, [form, settings]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    updateSettings(values);
+    updateSettings({
+      achievementId: values.achievementId,
+      achievement: undefined,
+    });
     setDialogOpen(false);
   };
 
