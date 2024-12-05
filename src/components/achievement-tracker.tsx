@@ -1,7 +1,8 @@
 "use client";
 
+import { skipToken } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Achievement } from "~/components/achievement";
+import { AchievementBlock } from "~/components/achievement-block";
 import { AchievementSelect } from "~/components/achievement-select";
 import { CharacterSelect } from "~/components/character-select";
 import { loadSettings, saveSettings } from "~/lib/wat-utils";
@@ -15,12 +16,15 @@ export const AchievementTracker = () => {
     realmName: "",
     region: "EU",
   } as SettingsType;
+
   const [settings, setSettings] = useState(defaultSettings);
+
   const handleUpdateSettings = (settings: SettingsType) => {
     const newSettings = saveSettings(settings);
     setSettings(newSettings);
   };
 
+  // load settings from local storage
   useEffect(() => {
     const localSettings = loadSettings();
     setSettings(localSettings);
@@ -28,16 +32,15 @@ export const AchievementTracker = () => {
 
   // load achievement
   const achievementQuery = api.achievement.getAchievement.useQuery(
-    settings.achievementId ?? 0,
-    { enabled: false },
+    !!settings.achievementId ? settings.achievementId : skipToken,
   );
+
   useEffect(() => {
-    void achievementQuery.refetch();
-  }, [achievementQuery, settings.achievementId]);
-  useEffect(() => {
-    if (achievementQuery.data)
+    const fetchedData = achievementQuery.data as Achievement;
+    if (achievementQuery.isSuccess)
       handleUpdateSettings({
-        achievement: achievementQuery.data as Achievement,
+        achievementId: fetchedData.id,
+        achievement: fetchedData,
       });
   }, [achievementQuery.data, achievementQuery.isSuccess]);
 
