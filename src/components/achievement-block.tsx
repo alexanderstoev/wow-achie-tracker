@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { SquarePlus } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { Card, CardHeader } from "~/components/ui/card";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
@@ -40,6 +40,7 @@ export const AchievementBlock = ({
   //
   const [expanded, setExpanded] = useState(false);
   const [achievement, setAchievement] = useState<Achievement>();
+
   // load achievement
   const achievementQuery = api.achievement.getAchievement.useQuery(
     expanded ? criteriaAchievement.id : skipToken,
@@ -49,7 +50,6 @@ export const AchievementBlock = ({
     criteriaAchievement.id,
     "query",
   );
-
   const isFetching = useIsFetching({ queryKey });
 
   useEffect(() => {
@@ -84,17 +84,36 @@ export const AchievementBlock = ({
             />
           </a>
         </CardHeader>
+        {expanded && (
+          <CardContent>
+            <p>{achievement?.description}</p>
+
+            {achievement?.criteria?.child_criteria?.map((criteria) => (
+              <React.Fragment key={criteria.id}>
+                {!criteria.achievement && !criteria.child_criteria && (
+                  <p>{criteria.description}</p>
+                )}
+                {!criteria.achievement && criteria.child_criteria?.[0] && (
+                  <p>{criteria.child_criteria[0]?.description}</p>
+                )}
+              </React.Fragment>
+            ))}
+          </CardContent>
+        )}
       </Card>
       {expanded &&
         achievement?.criteria?.child_criteria?.map((criteria) => (
-          <AchievementBlock
-            key={criteria.id}
-            indentLevel={(indentLevel ?? 0) + 1}
-            criteriaAchievement={{
-              name: criteria.description,
-              id: criteria.achievement?.id ?? criteria.id,
-            }}
-          />
+          <React.Fragment key={criteria.id}>
+            {criteria.achievement && (
+              <AchievementBlock
+                indentLevel={(indentLevel ?? 0) + 1}
+                criteriaAchievement={{
+                  name: criteria.description,
+                  id: criteria.achievement?.id ?? criteria.id,
+                }}
+              />
+            )}
+          </React.Fragment>
         ))}
     </>
   );

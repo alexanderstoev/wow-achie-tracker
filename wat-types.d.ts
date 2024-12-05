@@ -49,6 +49,7 @@ interface ChildCriterum {
   achievement?: CriteriaAchievement;
   is_completed?: boolean;
   show_progress_bar: boolean;
+  child_criteria?: ChildCriterum[];
 }
 
 interface PlayerAchievements {
