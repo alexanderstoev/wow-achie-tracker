@@ -1,6 +1,6 @@
 export const LOCAL_STORAGE_SETTINGS_ITEM = "wowAchiSettings";
 
-export const loadSettings = () => {
+export const loadSettings = (returnDefault?: boolean) => {
   const defaultSettings = {
     achievementId: 0,
     characterName: "",
@@ -8,7 +8,7 @@ export const loadSettings = () => {
     region: "EU",
   } as SettingsType;
 
-  if (typeof window === "undefined") {
+  if (typeof window === "undefined" || returnDefault) {
     return defaultSettings;
   }
 

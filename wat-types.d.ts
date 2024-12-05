@@ -70,7 +70,7 @@ interface PlayerAchivement {
 
 interface SettingsType {
   achievementId?: number;
-  achievement?: Achievement;
+  achievement?: CriteriaAchievement;
   characterName?: string;
   realmName?: string;
   region?: RegionType;
