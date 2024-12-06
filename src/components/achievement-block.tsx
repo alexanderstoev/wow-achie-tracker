@@ -1,22 +1,23 @@
 import { skipToken, useIsFetching } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 import { cva, type VariantProps } from "class-variance-authority";
-import { SquarePlus } from "lucide-react";
+import { SquareMinus, SquarePlus } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { AchievementCriteria } from "~/components/achievement-criteria";
 import { useSettings } from "~/components/providers/settings-provider";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
-import { isAchievementCompleted } from "~/lib/wat-utils";
+import { isAchievementCompleted, isCriteriaCompleted } from "~/lib/wat-utils";
 import { api } from "~/trpc/react";
 
 const achievementBlockVariants = cva(
-  "border-none bg-gradient-to-r cursor-pointer",
+  "border-none bg-gradient-to-r cursor-pointer text-neutral-200",
   {
     variants: {
       variant: {
-        default: "from-neutral-600 to-neutral-400 text-neutral-50",
-        completed: "from-green-600 to-green-500 text-green-50",
+        default: "from-neutral-700 to-neutral-500",
+        completed: "from-violet-950 to-violet-800",
       },
     },
     defaultVariants: {
@@ -41,6 +42,7 @@ export const AchievementBlock = ({
 }: AchievementBlockProps) => {
   //
   const [expanded, setExpanded] = useState(false);
+  // const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [achievement, setAchievement] = useState<Achievement>();
   const { settings } = useSettings();
 
@@ -60,6 +62,22 @@ export const AchievementBlock = ({
     if (achievementQuery.isSuccess) setAchievement(fetchedData);
   }, [achievementQuery.data, achievementQuery.isSuccess, isFetching]);
 
+  // const achievementCompleted = isAchievementCompleted(
+  //   criteriaAchievement.id,
+  //   settings,
+  // );
+
+  const checkCriteriaCompletition = (criteriaId: number) => {
+    const criteriaCompleted = isCriteriaCompleted(
+      criteriaAchievement.id,
+      criteriaId,
+      settings,
+    );
+
+    // if (achievementCompleted && !criteriaCompleted) setShowErrorMessage(true);
+    return criteriaCompleted;
+  };
+
   return (
     <>
       <Card
@@ -70,7 +88,8 @@ export const AchievementBlock = ({
       >
         <CardHeader className="flex flex-row items-center justify-between p-0 px-4">
           <div className="flex items-center gap-2">
-            <SquarePlus />
+            {expanded && <SquareMinus />}
+            {!expanded && <SquarePlus />}
             <span>{criteriaAchievement?.name}</span>
           </div>
           <a
@@ -90,17 +109,25 @@ export const AchievementBlock = ({
         {expanded && (
           <CardContent>
             <p>{achievement?.description}</p>
-
-            {achievement?.criteria?.child_criteria?.map((criteria) => (
-              <React.Fragment key={criteria.id}>
-                {!criteria.achievement && !criteria.child_criteria && (
-                  <p>{criteria.description}</p>
-                )}
-                {!criteria.achievement && criteria.child_criteria?.[0] && (
-                  <p>{criteria.child_criteria[0]?.description}</p>
-                )}
-              </React.Fragment>
-            ))}
+            <div className="flex flex-wrap">
+              {achievement?.criteria?.child_criteria?.map((criteria) => (
+                <div key={criteria.id} className="w-1/3">
+                  {!criteria.achievement && !criteria.child_criteria && (
+                    <AchievementCriteria
+                      variant={
+                        checkCriteriaCompletition(criteria.id)
+                          ? "completed"
+                          : "default"
+                      }
+                      caption={criteria.description}
+                    />
+                  )}
+                  {!criteria.achievement && criteria.child_criteria?.[0] && (
+                    <p>{criteria.child_criteria[0]?.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
           </CardContent>
         )}
       </Card>

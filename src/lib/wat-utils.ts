@@ -31,8 +31,32 @@ export const isAchievementCompleted = (
   achievementId: number,
   settings: SettingsType,
 ) => {
-  const achiData = settings.characterAchievements?.achievements.find(
-    (achi) => achi.id === achievementId,
+  const achiData = getEntryFromArray(
+    achievementId,
+    settings.characterAchievements?.achievements ?? [],
   );
   return !!achiData?.completed_timestamp;
+};
+
+export const isCriteriaCompleted = (
+  achievementId: number,
+  criteriaId: number,
+  settings: SettingsType,
+) => {
+  const achiData = getEntryFromArray(
+    achievementId,
+    settings.characterAchievements?.achievements ?? [],
+  );
+  const critData = getEntryFromArray(
+    criteriaId,
+    achiData?.criteria.child_criteria ?? [],
+  );
+  return !!critData?.is_completed;
+};
+
+export const getEntryFromArray = <T extends { id: number }>(
+  entryId: number,
+  array: T[],
+) => {
+  return array.find((entry) => entry.id === entryId);
 };
