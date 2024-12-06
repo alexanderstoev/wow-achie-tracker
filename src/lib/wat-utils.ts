@@ -26,3 +26,13 @@ export const saveSettings = (settings: SettingsType) => {
   window.localStorage.setItem(LOCAL_STORAGE_SETTINGS_ITEM, settingsStr);
   return newSettings;
 };
+
+export const isAchievementCompleted = (
+  achievementId: number,
+  settings: SettingsType,
+) => {
+  const achiData = settings.characterAchievements?.achievements.find(
+    (achi) => achi.id === achievementId,
+  );
+  return !!achiData?.completed_timestamp;
+};

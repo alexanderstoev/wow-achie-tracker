@@ -4,8 +4,10 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { SquarePlus } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { useSettings } from "~/components/providers/settings-provider";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
+import { isAchievementCompleted } from "~/lib/wat-utils";
 import { api } from "~/trpc/react";
 
 const achievementBlockVariants = cva(
@@ -40,6 +42,7 @@ export const AchievementBlock = ({
   //
   const [expanded, setExpanded] = useState(false);
   const [achievement, setAchievement] = useState<Achievement>();
+  const { settings } = useSettings();
 
   // load achievement
   const achievementQuery = api.achievement.getAchievement.useQuery(
@@ -107,6 +110,11 @@ export const AchievementBlock = ({
             {criteria.achievement && (
               <AchievementBlock
                 indentLevel={(indentLevel ?? 0) + 1}
+                variant={
+                  isAchievementCompleted(criteria.achievement.id, settings)
+                    ? "completed"
+                    : "default"
+                }
                 criteriaAchievement={{
                   name: criteria.description,
                   id: criteria.achievement?.id ?? criteria.id,

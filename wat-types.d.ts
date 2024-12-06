@@ -52,20 +52,20 @@ interface ChildCriterum {
   child_criteria?: ChildCriterum[];
 }
 
-interface PlayerAchievements {
-  achievements: PlayerAchivement[];
+interface CharacterAchievements {
+  achievements: CharacterAchivement[];
 }
 
-interface PlayerCriteria {
+interface CharacterCriteria {
   id: number;
   is_completed: boolean;
   amount: number;
   child_criteria: ChildCriterum[];
 }
-interface PlayerAchivement {
+interface CharacterAchivement {
   id: number;
   achievement: CriteriaAchievement;
-  criteria: PlayerCriteria;
+  criteria: CharacterCriteria;
   completed_timestamp: number;
 }
 
@@ -75,6 +75,7 @@ interface SettingsType {
   characterName?: string;
   realmName?: string;
   region?: RegionType;
+  characterAchievements?: CharacterAchievements;
 }
 
 type RegionType = "US" | "EU" | "KR" | "TW" | "CN";

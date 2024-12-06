@@ -6,6 +6,7 @@ import { type Metadata } from "next";
 import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/providers/theme-provider";
 import { DarkModeSelect } from "~/components/dark-mode-select";
+import { SettingsProvider } from "~/components/providers/settings-provider";
 
 export const metadata: Metadata = {
   title: "WoW Achievement Tracker",
@@ -25,10 +26,12 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-            <div>
-              <DarkModeSelect />
-            </div>
-            {children}
+            <SettingsProvider>
+              <div>
+                <DarkModeSelect />
+              </div>
+              {children}
+            </SettingsProvider>
           </ThemeProvider>
         </TRPCReactProvider>
       </body>

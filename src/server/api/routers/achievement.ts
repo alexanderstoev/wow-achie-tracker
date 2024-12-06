@@ -44,7 +44,7 @@ export const achievementRouter = createTRPCRouter({
       const response = await makeRequest<Achievement>(url, "static");
       return response;
     }),
-  getPlayerAchievements: publicProcedure
+  getCharacterAchievements: publicProcedure
     .input(
       z.object({
         realm: z.string(),
@@ -55,7 +55,7 @@ export const achievementRouter = createTRPCRouter({
     .query(async ({ input }) => {
       const url = `https://${input.region}.api.blizzard.com/profile/wow/character/${input.realm}/${input.character}/achievements`;
       const response = await makeRequest(url.toLowerCase(), "profile");
-      return response as PlayerAchievements;
+      return response as CharacterAchievements;
     }),
 });
 
