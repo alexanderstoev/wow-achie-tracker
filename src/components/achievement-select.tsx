@@ -28,6 +28,12 @@ const formSchema = z.object({
   achievementId: z.coerce.number(),
 });
 
+const recommendedAchievements = [
+  { id: 41201, caption: "You Xal Not Pass" },
+  { id: 41133, caption: "Isle Remember You" },
+  { id: 40438, caption: "Glory of the Delver" },
+];
+
 export type AchievementSelectProps = {
   settings: SettingsType;
   updateSettings: (settings: SettingsType) => void;
@@ -102,6 +108,24 @@ export const AchievementSelect = ({
                 Apply
               </Button>
             </DialogFooter>
+            <div className="flex-col justify-start">
+              Recommended achievements to track:
+              <div className="flex flex-wrap gap-2">
+                {recommendedAchievements.map((achi) => (
+                  <Button
+                    key={achi.id}
+                    variant="outline"
+                    className="text-sm"
+                    onClick={() => {
+                      form.setValue("achievementId", achi.id);
+                      handleApplyClick();
+                    }}
+                  >
+                    {achi.caption}
+                  </Button>
+                ))}
+              </div>
+            </div>
           </form>
         </Form>
       </DialogContent>
