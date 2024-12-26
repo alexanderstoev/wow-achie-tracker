@@ -7,7 +7,10 @@ import { AchievementBlock } from "~/components/achievement-block";
 import { AchievementSelect } from "~/components/achievement-select";
 import { CharacterSelect } from "~/components/character-select";
 import { useSettings } from "~/components/providers/settings-provider";
-import { isAchievementCompleted } from "~/lib/wat-utils";
+import {
+  isAchievementCompleted,
+  updateRecentAchievement,
+} from "~/lib/wat-utils";
 import { api } from "~/trpc/react";
 
 export const AchievementTracker = () => {
@@ -33,14 +36,21 @@ export const AchievementTracker = () => {
 
   useEffect(() => {
     const fetchedData = achievementQuery.data! as Achievement;
-    if (achievementQuery.isSuccess)
+    let recentAchievements = [] as CriteriaAchievement[];
+    if (achievementQuery.isSuccess) {
+      recentAchievements = updateRecentAchievement(
+        fetchedData,
+        settings.recentAchievements,
+      );
       updateSettings({
         achievementId: fetchedData.id,
+        recentAchievements: recentAchievements,
         achievement: {
           id: fetchedData.id,
           name: fetchedData.name ?? "",
         },
       });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     achievementQuery.data,

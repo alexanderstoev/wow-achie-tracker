@@ -62,11 +62,6 @@ export const AchievementBlock = ({
     if (achievementQuery.isSuccess) setAchievement(fetchedData);
   }, [achievementQuery.data, achievementQuery.isSuccess, isFetching]);
 
-  // const achievementCompleted = isAchievementCompleted(
-  //   criteriaAchievement.id,
-  //   settings,
-  // );
-
   const checkCriteriaCompletition = (criteriaId: number) => {
     const criteriaCompleted = isCriteriaCompleted(
       criteriaAchievement.id,

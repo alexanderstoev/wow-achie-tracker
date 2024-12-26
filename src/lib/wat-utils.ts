@@ -6,6 +6,7 @@ export const loadSettings = (returnDefault?: boolean) => {
     characterName: "",
     realmName: "",
     region: "EU",
+    recentAchievements: [],
   } as SettingsType;
 
   if (typeof window === "undefined" || returnDefault) {
@@ -25,6 +26,19 @@ export const saveSettings = (settings: SettingsType) => {
   const settingsStr = JSON.stringify(newSettings);
   window.localStorage.setItem(LOCAL_STORAGE_SETTINGS_ITEM, settingsStr);
   return newSettings;
+};
+
+export const updateRecentAchievement = (
+  achievement: CriteriaAchievement,
+  achievements: CriteriaAchievement[] | undefined,
+) => {
+  if (typeof achievements === "undefined") return [];
+
+  const newAchievements = achievements?.map((achi) => {
+    if (achi && achi.id === achievement.id) achi.name = achievement.name;
+    return achi;
+  });
+  return newAchievements;
 };
 
 export const isAchievementCompleted = (
