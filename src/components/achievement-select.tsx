@@ -24,6 +24,8 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 
+const MAX_RECENT_ACHIEVEMENTS = 5;
+
 const formSchema = z.object({
   achievementId: z.coerce.number(),
 });
@@ -56,9 +58,22 @@ export const AchievementSelect = ({
   }, [form, settings]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const recentAchievements =
+      settings.recentAchievements?.filter((achi) =>
+        achi.id != values.achievementId ? true : false,
+      ) ?? [];
+    recentAchievements.unshift({
+      id: values.achievementId,
+      name: "",
+    });
+    if (recentAchievements.length > MAX_RECENT_ACHIEVEMENTS) {
+      recentAchievements.pop();
+    }
+
     updateSettings({
       achievementId: values.achievementId,
       achievement: undefined,
+      recentAchievements: recentAchievements,
     });
     setDialogOpen(false);
   };
@@ -109,19 +124,41 @@ export const AchievementSelect = ({
               </Button>
             </DialogFooter>
             <div className="flex-col justify-start">
-              Recommended achievements to track:
+              <span className="text-lg text-green-500">
+                Recommended achievements to track:
+              </span>
               <div className="flex flex-wrap gap-2">
                 {recommendedAchievements.map((achi) => (
                   <Button
                     key={achi.id}
                     variant="outline"
-                    className="text-sm"
+                    className="text-sm text-green-600"
                     onClick={() => {
                       form.setValue("achievementId", achi.id);
                       handleApplyClick();
                     }}
                   >
                     {achi.caption}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div className="mt-4 flex-col justify-start">
+              <span className="text-lg text-orange-500">
+                Recently tracked achievements:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {settings.recentAchievements?.map((achi) => (
+                  <Button
+                    key={achi.id}
+                    variant="outline"
+                    className="block max-w-48 truncate text-xs text-orange-600"
+                    onClick={() => {
+                      form.setValue("achievementId", achi.id);
+                      handleApplyClick();
+                    }}
+                  >
+                    {achi.name || achi.id}
                   </Button>
                 ))}
               </div>

@@ -72,6 +72,7 @@ interface CharacterAchivement {
 interface SettingsType {
   achievementId?: number;
   achievement?: CriteriaAchievement;
+  recentAchievements?: CriteriaAchievement[];
   characterName?: string;
   realmName?: string;
   region?: RegionType;
